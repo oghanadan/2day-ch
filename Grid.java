@@ -31,7 +31,7 @@ public class Grid {
             //int j = (int)(Math.random()*N);
             int x = rand.nextInt(N);
             int j = rand.nextInt(N);
-            if (board[x][j].getColor()=="Grey"){
+            if (board[x][j].getColor()==TileType.GREY){
                 board[x][j] = new GreenCell();
                 greenCount++;
             }
@@ -43,7 +43,7 @@ public class Grid {
         while (blackCount<blackAmount){
             int x = (int)(Math.random()*N);
             int j = (int)(Math.random()*N);
-            if (board[x][j].getColor()=="Grey"){
+            if (board[x][j].getColor()== TileType.GREY){
                 board[x][j] = new BlackCell();
                 blackCount++;
             }
