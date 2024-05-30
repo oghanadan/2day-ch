@@ -12,6 +12,7 @@ public class Game{
         playerRed = new Player(Color.RED,0,0);
         playerBlue = new Player(Color.BLUE,0,0);
         setBoard();
+        startGame();
     }
 
     public void setBoard(){
