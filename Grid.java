@@ -3,13 +3,21 @@ import java.util.Random;
 import java.util.random.*;
 
 public class Grid {
-    public static void main(String[] args) {
-        int N = 10;
-        DefaultCell[][] position = new DefaultCell[N][N];
+
+    private int N;
+    private DefaultCell[][] GameBoard;
+
+    public Grid(int N) {
+        this.N = N;
+        generateGrid(N);
+    }
+
+    public generateGrid(int N){
+        DefaultCell[][] board = new DefaultCell[N][N];
         // To fill Grid with Grey Cells
         for (int i=0; i<N; i++){
             for (int j=0; j<N; j++){
-                position[i][j]= new GreyCell();
+                board[i][j]= new GreyCell();
             }
         }
         // To Randomly insert Green Cells
@@ -23,8 +31,8 @@ public class Grid {
             //int j = (int)(Math.random()*N);
             int x = rand.nextInt(N);
             int j = rand.nextInt(N);
-            if (position[x][j].getColor()=="Grey"){
-                position[x][j] = new GreenCell();
+            if (board[x][j].getColor()=="Grey"){
+                board[x][j] = new GreenCell();
                 greenCount++;
             }
         }
@@ -35,8 +43,8 @@ public class Grid {
         while (blackCount<blackAmount){
             int x = (int)(Math.random()*N);
             int j = (int)(Math.random()*N);
-            if (position[x][j].getColor()=="Grey"){
-                position[x][j] = new BlackCell();
+            if (board[x][j].getColor()=="Grey"){
+                board[x][j] = new BlackCell();
                 blackCount++;
             }
         }
@@ -46,14 +54,20 @@ public class Grid {
         for (int i=0; i<N; i++){
             for (int j=0; j<N; j++){
                     if (j==0 && index<N){
-                        String b = position[i][j].getDisplayValue();
+                        String b = board[i][j].getDisplayValue();
                         System.out.print(b);
-                        forTable[index] = b + " "+ position[i][j].getDisplayValue();
+                        forTable[index] = b + " "+ board[i][j].getDisplayValue();
                     }
-                    else if (index<N) {forTable[index] = forTable + " "+position[i][j].getDisplayValue();} 
+                    else if (index<N) {forTable[index] = forTable + " "+board[i][j].getDisplayValue();} 
                 index++;
             }
             System.out.println(forTable[i]);
         }       
+
+        this.GameBoard = board;
+    }
+
+    public DefaultCell[][] getGameBoard(){
+        return GameBoard;
     }
 }

@@ -1,13 +1,14 @@
 public class GreenCell implements DefaultCell{
+    private String value = "G";
+
     public String getColor(){
         return "Green";
     }
-    private String value = "G";
+    
     public String getDisplayValue(){
         return value;
     }
     public GreenCell(){
         getDisplayValue();
-        //System.out.println(getDisplayValue());
     }
 }   
