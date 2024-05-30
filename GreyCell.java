@@ -1,12 +1,20 @@
 public class GreyCell implements DefaultCell {
-    public String getColor(){
-        return "Grey";
+    private int fuelConsumption = (int)(Math.random()*3)+1;
+
+    private static final TileType type = TileType.GREY;
+
+    public TileType getColor(){
+        return type;
     }
-    private int value = (int)(Math.random()*3)+1;
 
     public String getDisplayValue(){
-        return String.valueOf(value);
+        return String.valueOf(fuelConsumption);
     }
+
+    public int getFuelConsumption(){
+        return fuelConsumption;
+    }
+
     public GreyCell(){
         getDisplayValue();
     }

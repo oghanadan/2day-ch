@@ -1,13 +1,16 @@
 public class BlackCell implements DefaultCell{
-    public String getColor(){
-        return "Black";
-    }
     private String value = "B";
+    private static final TileType type = TileType.BLACK;
+
+    public TileType getColor(){
+        return type;
+    }
+    
     public String getDisplayValue(){
         return value;
     }
+    
     public BlackCell(){
         getDisplayValue();
-        //System.out.println(getDisplayValue());
     }
 }   

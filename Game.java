@@ -8,7 +8,6 @@ public class Game{
     private int round = 1;
 
 
-
     public Game(){
         playerRed = new Player(Color.RED,0,0);
         playerBlue = new Player(Color.BLUE,0,0);
@@ -31,6 +30,9 @@ public class Game{
 
     private void playTurn(Player player){
         int dieRoll = die.rollAndGetNewValue();
+        PlayerMovementOutcome movementOutcome = player.movePlayer(dieRoll, board);
+
+
     }
 
 
