@@ -24,6 +24,14 @@ public class Game{
         return board;
     }
 
+    public Player getPlayerRed(){
+        return playerRed;
+    }
+
+    public Player getPlayerBlue(){
+        return playerBlue;
+    }
+
     public void startGame(){
         while(playerRed.isAlive() && playerBlue.isAlive()){
             boolean isRedturn = round % 2 != 0;
