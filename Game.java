@@ -6,17 +6,18 @@ public class Game{
     private DefaultCell[][] board;
     private Die die = new Die();
     private int round = 1;
+    private int size = 5;
 
 
     public Game(){
         playerRed = new Player(Color.RED,0,0);
         playerBlue = new Player(Color.BLUE,0,0);
         setBoard();
-        startGame();
+        //startGame();
     }
 
     public void setBoard(){
-        Grid grid = new Grid(10);
+        Grid grid = new Grid(size);
         this.board = grid.getGameBoard();
     }
 

@@ -2,19 +2,6 @@
 import java.awt.Color;
 import java.util.Random;
 
-
-enum TileColor {
-  GREY,
-  GREEN,
-  BLACK
-}
-
-enum TileType {
-  START,
-  END,
-  NORMAL
-}
-
 public class Tile{
     private TileColor tileColor;
     private int fuelCost = 0;
