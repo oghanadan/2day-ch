@@ -19,6 +19,10 @@ public class Game{
         this.board = grid.getGameBoard();
     }
 
+    public DefaultCell[][] getBoard(){
+        return board;
+    }
+
     public void startGame(){
         while(playerRed.isAlive() && playerBlue.isAlive()){
             boolean isRedturn = round % 2 != 0;
