@@ -65,20 +65,8 @@ public class GameUi {
 
         // Button panel for "Roll Dice" button
         JPanel buttonPanel = new JPanel();
-        JButton rollDiceButton = new JButton();
-        // Content of the button
-        rollDiceButton.setText("Roll Dice");
-        rollDiceButton.setFocusable(false);
-        // Icon of the button
-        int diceIconSize = 25;
-        ImageIcon diceIcon = new ImageIcon("images/dice.png");
-        Image diceImage = diceIcon.getImage();
-        Image newDiceImage = diceImage.getScaledInstance(diceIconSize, diceIconSize, diceImage.SCALE_SMOOTH);
-        ImageIcon smallDiceIcon = new ImageIcon(newDiceImage);
-        // Icon content alignment
-        rollDiceButton.setIcon(smallDiceIcon);
-        rollDiceButton.setHorizontalTextPosition(JButton.CENTER);
-        rollDiceButton.setVerticalTextPosition(JButton.BOTTOM);
+        RollDiceButton rollDiceButton = new RollDiceButton();
+
         // Roll dice button action
         rollDiceButton.addActionListener(e -> {
             int diceRoll = (int) (Math.random() * 6) + 1;
