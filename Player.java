@@ -1,3 +1,4 @@
+import java.awt.Color;
 enum PlayerMovementOutcome {
     SUCCESS,
     OUT_OF_FUEL,
@@ -7,7 +8,7 @@ enum PlayerMovementOutcome {
 
 public class Player{
     private Color color;
-    private [int][int] position; // [row][col]
+    private int[] position; // [row, col]
     private Car car;
     private boolean isAlive = true;
 
@@ -24,9 +25,14 @@ public class Player{
         this.position[1] = col;
     }
 
-    public void setPosition(int[] position){
-        this.position = position;
+    public void setRow(int row){
+        this.position[0] = row;
     }
+
+    public void setCol(int col){
+        this.position[1] = col;
+    }
+    
 
     public int[] getPosition(){
         return this.position;
@@ -43,23 +49,26 @@ public class Player{
     public PlayerMovementOutcome movePlayer(int dieRoll, DefaultCell[][] board){
         int gridSize = board.length;
         for (int i = 0; i < dieRoll; i++) {
-            boolean shouldMoveLeft = player.row % 2 != 0;
+            DefaultCell currentCell = board[this.position[0]][this.position[1]];
+            boolean shouldMoveLeft = this.position[0] % 2 != 0;
             if (shouldMoveLeft) {
-                if (player > 0) {
-                    player.col--;
-                } else if (player.row > 0) {
-                    player.col = 0;
-                    player.row--;
+                if (this.position[1] > 0) {
+                    setCol(this.position[1] - 1);
+                } else if (this.position[0] > 0) {
+                    setCol(0);
+                    setRow(this.position[0] - 1);
                 }
             } else {
-                if (player.col < gridSize - 1) {
-                    player.col++;
-                } else if (player.row > 0) {
-                    player.col = gridSize - 1;
-                    player.row--;
+                if (this.position[1] < gridSize - 1) {
+                    setCol(this.position[1] + 1);
+                } else if (this.position[0] > 0) {
+                    setCol(gridSize - 1);
+                    setRow(this.position[0] - 1);
                 }
             }
         }
+
+        return PlayerMovementOutcome.SUCCESS;
     }
 
 }

@@ -3,7 +3,7 @@ public class Car{
 
     public void setFuel(int fuel){
         if(fuel > 0){
-            this.fuel = fuel
+            this.fuel = fuel;
         }else{
             this.fuel = 0;
         }

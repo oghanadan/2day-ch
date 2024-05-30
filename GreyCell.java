@@ -8,7 +8,6 @@ public class GreyCell implements DefaultCell {
         return String.valueOf(value);
     }
     public GreyCell(){
-        //System.out.println(getDisplayValue());
         getDisplayValue();
     }
 }

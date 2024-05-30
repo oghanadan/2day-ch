@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class Game{
     private Player playerRed;
     private Player playerBlue;
@@ -8,8 +10,8 @@ public class Game{
 
 
     public Game(){
-        playerRed = new Player("Red");
-        playerBlue = new Player("Blue");
+        playerRed = new Player(Color.RED,0,0);
+        playerBlue = new Player(Color.BLUE,0,0);
         setBoard();
     }
 
@@ -20,10 +22,15 @@ public class Game{
 
     public void startGame(){
         while(playerRed.isAlive() && playerBlue.isAlive()){
-            int dieRoll = die.rollAndGetNewValue();
             boolean isRedturn = round % 2 != 0;
-            
+            Player currentPlayer = isRedturn ? playerRed : playerBlue;
+            playTurn(currentPlayer);
+
         }
+    }
+
+    private void playTurn(Player player){
+        int dieRoll = die.rollAndGetNewValue();
     }
 
 

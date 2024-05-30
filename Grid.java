@@ -5,14 +5,14 @@ import java.util.random.*;
 public class Grid {
 
     private int N;
-    private DefaultCell[][] GameBoard;
+    private DefaultCell[][] gameBoard;
 
     public Grid(int N) {
         this.N = N;
-        generateGrid(N);
+        this.generateGrid(N);
     }
 
-    public generateGrid(int N){
+    public void generateGrid(int N){
         DefaultCell[][] board = new DefaultCell[N][N];
         // To fill Grid with Grey Cells
         for (int i=0; i<N; i++){
@@ -64,10 +64,10 @@ public class Grid {
             System.out.println(forTable[i]);
         }       
 
-        this.GameBoard = board;
+        this.gameBoard = board;
     }
 
     public DefaultCell[][] getGameBoard(){
-        return GameBoard;
+        return gameBoard;
     }
 }
