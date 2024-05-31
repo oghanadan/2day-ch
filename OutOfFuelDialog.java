@@ -54,7 +54,7 @@ public class OutOfFuelDialog extends JDialog {
         goToStartButton = new JButton("Go to Start");
     }
 
-
+    // Display the components in a grid
     private void layoutComponents() {
         mainPanel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
