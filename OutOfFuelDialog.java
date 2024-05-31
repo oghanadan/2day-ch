@@ -3,10 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.*;
 
-public class OutOfFuelDialog extends JDialog{
+public class OutOfFuelDialog extends JDialog {
+    private Player player;
+    private DefaultCell[][] board;
     // Variables
     private int option;
-    private int turns;
+    private int turns = 0;
     // Panels
     JPanel turnPanel;
     JPanel goToStartPanel;
@@ -21,9 +23,11 @@ public class OutOfFuelDialog extends JDialog{
     JButton goToStartButton;
     JButton confirmTurnButton;
 
-
-    OutOfFuelDialog(JFrame parent){
+    OutOfFuelDialog(JFrame parent, Player player, DefaultCell[][] board) {
         super(parent, "Out of Fuel", true);
+
+        this.player = player;
+        this.board = board;
 
         // Create a header label
         headerLabel = new JLabel("Select one Out of Fuel Options:");
@@ -48,7 +52,6 @@ public class OutOfFuelDialog extends JDialog{
         turnPanel.add(turnSlider);
         turnPanel.add(confirmTurnButton);
 
-
         // Create a panel for the go to start option
         goToStartPanel = new JPanel();
         goToStartButton = new JButton("Go to Start");
@@ -67,7 +70,6 @@ public class OutOfFuelDialog extends JDialog{
         // Start the select option method
         selectOption();
 
-
         // Add a window listener to dispose the dialog
         this.addWindowListener(new WindowAdapter() {
             @Override
@@ -75,7 +77,6 @@ public class OutOfFuelDialog extends JDialog{
                 dispose();
             }
         });
-
 
         pack();
         setSize(600, 400);
@@ -91,7 +92,6 @@ public class OutOfFuelDialog extends JDialog{
         return turns;
     }
 
-
     // Setters
     public void setOption(int option) {
         // If a mistake happens in the code set the option to 1 as default
@@ -106,9 +106,8 @@ public class OutOfFuelDialog extends JDialog{
         this.turns = turns;
     }
 
-
     // Select option method
-    public void selectOption(){
+    public void selectOption() {
         // Add action listeners to the slider
         turnSlider.addChangeListener(new ChangeListener() {
             @Override
@@ -121,7 +120,8 @@ public class OutOfFuelDialog extends JDialog{
         confirmTurnButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setOption(1);
+                OutOfFuelDialog.this.player.onRefuelChoice(turns, board); // Correctly reference player
+                OutOfFuelDialog.this.setVisible(false);
             }
         });
 
@@ -129,7 +129,8 @@ public class OutOfFuelDialog extends JDialog{
         goToStartButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                setOption(2);
+                OutOfFuelDialog.this.player.onRefuelChoice(0, board); // Correctly reference player
+                OutOfFuelDialog.this.setVisible(false);
             }
         });
     }

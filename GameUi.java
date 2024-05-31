@@ -119,12 +119,24 @@ public class GameUi {
             // Freeze inputs
             toggleInputs();
 
-            this.game.onTurnPlayed();
-            int lastDieRoll = this.game.getDie().getLastRoll();
-            setDieRoll(lastDieRoll);
+            boolean canMove = this.game.onTurnPlayed();
+            
 
             // Get the current player
             Player currentPlayer = this.game.getCurrentTurnPlayer();
+
+            if(!canMove){
+                JOptionPane.showMessageDialog(
+                    frame,
+                    "Player " + currentPlayer.getColorName() + "misses turn! Remaining turns: " + currentPlayer.getTurnsToMiss()
+                );
+                toggleInputs();
+                game.incrementRound();
+                return;
+            }
+
+            int lastDieRoll = this.game.getDie().getLastRoll();
+            setDieRoll(lastDieRoll);
 
             // Create a timer to update the player's position with a delay
             Timer timer = new Timer(500, new ActionListener() {
@@ -139,15 +151,17 @@ public class GameUi {
                         PlayerMovementOutcome movementOutcome = game.movePlayer(currentPlayer, landed);
                         if (movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
                             currentPlayer.onOutOfFuel(board, frame);
+                            count = lastDieRoll;
                         } else if (movementOutcome == PlayerMovementOutcome.WIN) {
                             JOptionPane.showMessageDialog(
                                     frame,
                                     "Player " + currentPlayer.getColorName() + " wins!"
                             );
+                            count = lastDieRoll;
                         } else if (movementOutcome == PlayerMovementOutcome.RESET) {
                             JOptionPane.showMessageDialog(
                                     frame,
-                                    "Player " + currentPlayer.getColor() + " landed on black tile!"
+                                    "Player " + currentPlayer.getColorName() + " landed on black tile!"
                             );
                         }
 
@@ -166,6 +180,8 @@ public class GameUi {
             });
             timer.setInitialDelay(0);
             timer.start();
+
+            game.incrementRound();
         });
         buttonPanel.add(rollDiceButton);
 
