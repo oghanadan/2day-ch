@@ -23,7 +23,7 @@ public class Grid {
         // To Randomly insert Green Cells
         Random rand = new Random();
         int greenCount = 0;
-        double a = N*N*0.35;
+        double a = N*N*0.15;
         //Using percentage (15%) for the amount of green cells
         int greenAmount = (int)a;
         while (greenCount<greenAmount){
@@ -39,7 +39,7 @@ public class Grid {
         // To randomly insert Black Cells
         int blackCount = 0;
         //Using percentage (15%) for the amount of black cells, a is the same since both black and green have same percentage ratio.
-        int blackAmount = (int)(N*N*0.15);
+        int blackAmount = (int)a;
         while (blackCount<blackAmount){
             int x = (int)(Math.random()*N);
             int j = (int)(Math.random()*N);
