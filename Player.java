@@ -40,6 +40,10 @@ public class Player{
         return this.color;
     }
 
+    public String getColorName(){
+        return this.color == Color.RED ? "RED" : "BLUE";
+    }
+
     public int[] getPosition(){
         return this.position;
     }
@@ -139,8 +143,49 @@ public class Player{
     }
 
     public void onPlayerLandsOnBlackTile(DefaultCell[][] board){
+        resetPlayerPosition(board);
+    }
+
+    private void resetPlayerPosition(DefaultCell[][] board){
         this.position[0] = board.length - 1;
         this.position[1] = 0;
     }
+
+    public void onRefuelChoice(int fuelRecharge, DefaultCell[][] board){
+        if(fuelRecharge > 0){
+            int turnsToMiss = 0;
+            switch(fuelRecharge){
+                case 20:
+                    this.car.increaseFuel(20);
+                    turnsToMiss = 1;
+                    break;
+                case 40:
+                    this.car.increaseFuel(40);
+                    turnsToMiss = 2;
+                    break;
+                case 60:
+                    this.car.increaseFuel(60);
+                    turnsToMiss = 3;
+                    break;
+                case 80:
+                    this.car.increaseFuel(80);
+                    turnsToMiss = 4;
+                    break;
+                case 100:
+                    this.car.increaseFuel(100);
+                    turnsToMiss = 5;
+                    break;
+                case 120:
+                    this.car.increaseFuel(120);
+                    turnsToMiss = 6;
+                    break;
+            }
+
+            this.turnsToMiss = turnsToMiss;
+        }else{
+            resetPlayerPosition(board);
+        }
+    }
+
 
 }

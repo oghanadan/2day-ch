@@ -133,7 +133,24 @@ public class GameUi {
                         removeCarLabelFromPreviousPosition(currentPlayer);
 
                         // Move the player
-                        game.movePlayer(currentPlayer, landed);
+                        PlayerMovementOutcome movementOutcome = game.movePlayer(currentPlayer, landed);
+                        if(movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
+                            JOptionPane.showMessageDialog(
+                                    frame,
+                                    "Player " + currentPlayer.getColorName() + " is out of fuel!",
+                                    
+                            );
+                        } else if (movementOutcome == PlayerMovementOutcome.WIN) {
+                            JOptionPane.showMessageDialog(
+                                    frame,
+                                    "Player " + currentPlayer.getColorName() + " wins!"
+                            );
+                        } else if (movementOutcome == PlayerMovementOutcome.RESET) {
+                            JOptionPane.showMessageDialog(
+                                    frame,
+                                    "Player " + currentPlayer.getColorName() + " landed on black tile!"
+                            );
+                        }
 
                         // Update the player's new position
                         updatePlayerUIPosition(currentPlayer);
