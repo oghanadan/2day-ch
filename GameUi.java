@@ -137,11 +137,8 @@ public class GameUi {
                         removeCarLabelFromPreviousPosition(currentPlayer);
                         // Move the player
                         PlayerMovementOutcome movementOutcome = game.movePlayer(currentPlayer, landed);
-                        if(movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
-                            JOptionPane.showMessageDialog(
-                                    frame,
-                                    "Player " + currentPlayer.getColorName() + " is out of fuel!"
-                            );
+                        if (movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
+                            currentPlayer.onOutOfFuel(board, frame);
                         } else if (movementOutcome == PlayerMovementOutcome.WIN) {
                             JOptionPane.showMessageDialog(
                                     frame,

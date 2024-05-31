@@ -1,4 +1,5 @@
 import java.awt.Color;
+import javax.swing.JFrame;
 
 enum PlayerMovementOutcome {
     SUCCESS,
@@ -149,6 +150,27 @@ public class Player{
     private void resetPlayerPosition(DefaultCell[][] board){
         this.position[0] = board.length - 1;
         this.position[1] = 0;
+    }
+
+    public void onOutOfFuel(DefaultCell[][] board, JFrame frame){
+        // Display the new frame
+        OutOfFuelDialog outOfFuelDialog = new OutOfFuelDialog(frame);
+        outOfFuelDialog.setVisible(true);
+
+        // Get the option from the frame
+        int option = outOfFuelDialog.getOption();
+
+        // If the player chooses to wait
+        if (option == 1) {
+            // Get the turns from the frame
+            int turns = outOfFuelDialog.getTurns();
+            // ...
+        } else {
+            // If the player chooses to go to start
+            resetPlayerPosition(board);
+            onRefuelChoice(120, board);
+        }
+        outOfFuelDialog.setVisible(false);
     }
 
     public void onRefuelChoice(int fuelRecharge, DefaultCell[][] board){
