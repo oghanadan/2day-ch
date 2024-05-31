@@ -6,7 +6,7 @@ public class Game{
     private DefaultCell[][] board;
     private Die die = new Die();
     private int round = 1;
-    private int size = 5;
+    private int size = 10;
 
 
     public Game(){
@@ -37,21 +37,28 @@ public class Game{
         return die;
     }
 
+    public void incrementRound(){
+        round++;
+    }
+
     public Player getCurrentTurnPlayer(){
         boolean isRedturn = round % 2 != 0;
         return isRedturn ? playerBlue : playerRed;
     }
 
-    public void onTurnPlayed(){
+    public boolean onTurnPlayed(){
+        boolean canMove = true;
         Player currentPlayer = getCurrentTurnPlayer();
 
         if(!currentPlayer.isToMissTurn()){
             int dieRoll = die.rollAndGetNewValue();
         }else{
             System.out.println("Player " + currentPlayer.getColor() + " misses turn!");
+            canMove = false;
         }
+        
 
-        round++;
+        return canMove;
     }
 
 

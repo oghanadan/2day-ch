@@ -3,6 +3,7 @@ import javax.swing.JFrame;
 
 enum PlayerMovementOutcome {
     SUCCESS,
+    PLAYER_MISS_TURN,
     OUT_OF_FUEL,
     RESET,
     WIN,
@@ -21,7 +22,6 @@ public class Player{
         setPosition(row, col);
         this.car = new Car();
     }
-
 
     public void setPosition(int row, int col){
         this.position[0] = row;
@@ -65,6 +65,10 @@ public class Player{
         return false;
     }
 
+    public int getTurnsToMiss(){
+        return turnsToMiss;
+    }
+
     public PlayerMovementOutcome movePlayer(DefaultCell[][] board, boolean landed){
         int gridSize = board.length;
 
@@ -106,7 +110,7 @@ public class Player{
     }
 
     public void updatePlayerPosition(int gridSize){
-        boolean shouldMoveLeft = (this.position[0] == 0) || (this.position[0] % 2 != 0);
+        boolean shouldMoveLeft = this.shouldMoveLeft(gridSize);
         if (shouldMoveLeft) {
             System.out.println(" - -Moving left - -");
             if (this.position[1] > 0) {
@@ -132,6 +136,18 @@ public class Player{
     
     }
 
+    private boolean shouldMoveLeft(int gridSize){
+        if(gridSize % 2 == 0){
+            System.out.println("GRID IS EVEN");
+            return (this.position[0] % 2 == 0) && (this.position[0] != 0) && (this.position[0] != gridSize - 1);
+            
+            
+        }else{
+            System.out.println("GRID IS ODD");
+            return (this.position[0] == 0) || (this.position[0] % 2 != 0);
+        }
+    }
+
     public void onPlayerLandsOnGreyTile(GreyCell landedOnCell){
         int fuelConsumption = landedOnCell.getFuelConsumption();
         this.car.decreaseFuel(fuelConsumption);
@@ -154,58 +170,43 @@ public class Player{
 
     public void onOutOfFuel(DefaultCell[][] board, JFrame frame){
         // Display the new frame
-        OutOfFuelDialog outOfFuelDialog = new OutOfFuelDialog(frame);
+        OutOfFuelDialog outOfFuelDialog = new OutOfFuelDialog(frame,this,board);
         outOfFuelDialog.setVisible(true);
-
-        // Get the option from the frame
-        int option = outOfFuelDialog.getOption();
-
-        // If the player chooses to wait
-        if (option == 1) {
-            // Get the turns from the frame
-            int turns = outOfFuelDialog.getTurns();
-            // ...
-        } else {
-            // If the player chooses to go to start
-            resetPlayerPosition(board);
-            onRefuelChoice(120, board);
-        }
-        outOfFuelDialog.setVisible(false);
+        
     }
 
     public void onRefuelChoice(int fuelRecharge, DefaultCell[][] board){
+        System.out.println("Refueling with: " + fuelRecharge);
         if(fuelRecharge > 0){
-            int turnsToMiss = 0;
             switch(fuelRecharge){
-                case 20:
+                case 1:
                     this.car.increaseFuel(20);
-                    turnsToMiss = 1;
+                    this.turnsToMiss = 1;
                     break;
-                case 40:
+                case 2:
                     this.car.increaseFuel(40);
-                    turnsToMiss = 2;
+                    this.turnsToMiss = 2;
                     break;
-                case 60:
+                case 3:
                     this.car.increaseFuel(60);
-                    turnsToMiss = 3;
+                    this.turnsToMiss = 3;
                     break;
-                case 80:
+                case 4:
                     this.car.increaseFuel(80);
-                    turnsToMiss = 4;
+                    this.turnsToMiss = 4;
                     break;
-                case 100:
+                case 5:
                     this.car.increaseFuel(100);
-                    turnsToMiss = 5;
+                    this.turnsToMiss = 5;
                     break;
-                case 120:
+                case 6:
                     this.car.increaseFuel(120);
-                    turnsToMiss = 6;
+                    this.turnsToMiss = 6;
                     break;
             }
-
-            this.turnsToMiss = turnsToMiss;
         }else{
             resetPlayerPosition(board);
+            this.car.setFuel(120);
         }
     }
 

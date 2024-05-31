@@ -13,7 +13,7 @@ public class Car{
         }
     }
 
-    public int getFuel(){
+    public int getFuel(){   
         return fuel;
     }
 
