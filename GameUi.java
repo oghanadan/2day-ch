@@ -19,6 +19,8 @@ public class GameUi {
     private JProgressBar redCarFuelBar;
     private JProgressBar blueCarFuelBar;
 
+    private boolean freezeInputs = false;
+
     public GameUi() {
         this.game = new Game();
     }
@@ -31,6 +33,10 @@ public class GameUi {
     public void setDieRoll(int dieRoll) {
         this.dieRoll = dieRoll;
         updateDieRollUI();
+    }
+
+    private void toggleInputs() {
+        this.freezeInputs = !this.freezeInputs;
     }
 
     // Create the game board UI
@@ -105,6 +111,14 @@ public class GameUi {
 
         // Roll dice button action
         rollDiceButton.addActionListener(e -> {
+            if (freezeInputs) {
+                System.out.println("Inputs are frozen");
+                return;
+            }
+
+            // Freeze inputs
+            toggleInputs();
+
             this.game.onTurnPlayed();
             int lastDieRoll = this.game.getDie().getLastRoll();
             setDieRoll(lastDieRoll);
@@ -120,9 +134,7 @@ public class GameUi {
                 public void actionPerformed(ActionEvent e) {
                     if (count < lastDieRoll) {
                         boolean landed = count == lastDieRoll - 1;
-
                         removeCarLabelFromPreviousPosition(currentPlayer);
-
                         // Move the player
                         PlayerMovementOutcome movementOutcome = game.movePlayer(currentPlayer, landed);
                         if(movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
@@ -151,6 +163,7 @@ public class GameUi {
                     } else {
                         // Stop the timer once the die roll count is reached
                         ((Timer) e.getSource()).stop();
+                        toggleInputs();
                     }
                 }
             });
