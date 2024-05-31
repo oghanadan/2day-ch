@@ -1,6 +1,7 @@
 public class Car{
     private int fuel = 120;
 
+    //sets the fuel of the car and handles the invalid cases
     public void setFuel(int fuel){
         if(fuel > 0){
             if(fuel <= 120){
@@ -13,10 +14,12 @@ public class Car{
         }
     }
 
+    //returns the fuel of the car
     public int getFuel(){   
         return fuel;
     }
 
+    //decreases the fuel of the car by a given amount 
     public void decreaseFuel(int fuel){
         if(fuel > 0){
             int newFuel = this.fuel - fuel;
@@ -29,6 +32,7 @@ public class Car{
         System.out.println("New Fuel: " + this.fuel);
     }
 
+    //increases the fuel of the car by a given amount
     public void increaseFuel(int fuel){
         if(fuel > 0){
             int newFuel = this.fuel + fuel;
@@ -36,6 +40,8 @@ public class Car{
         }
     }
 
+
+    //returns a percentage of the current amount fuel in the car
     public int getFuelByPercentage(int percentage) {
         if (percentage > 0) {
             int newFuel = (int)(this.fuel * ((float)percentage / 100));
@@ -45,6 +51,7 @@ public class Car{
         return 0;
     }
 
+    //returns true if the car is out of fuel
     public boolean isOutOfFuel(){
         return this.fuel == 0;
     }
