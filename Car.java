@@ -1,9 +1,13 @@
 public class Car{
-    private int fuel = 10;
+    private int fuel = 120;
 
     public void setFuel(int fuel){
         if(fuel > 0){
-            this.fuel = fuel;
+            if(fuel <= 120){
+                this.fuel = fuel;
+            }else{
+                this.fuel = 120;
+            }
         }else{
             this.fuel = 0;
         }
@@ -15,12 +19,8 @@ public class Car{
 
     public void decreaseFuel(int fuel){
         if(fuel > 0){
-            if(fuel <= 120){
-                int newFuel = this.fuel - fuel;
-                setFuel(newFuel);
-            }else{
-                setFuel(120);
-            }
+            int newFuel = this.fuel - fuel;
+            setFuel(newFuel);
         }else{
             setFuel(0);
         }

@@ -151,6 +151,7 @@ public class GameUi {
                             );
                         }
 
+
                         // Update the player's new position
                         updatePlayerUIPosition(currentPlayer);
 
