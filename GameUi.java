@@ -137,8 +137,7 @@ public class GameUi {
                         if(movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
                             JOptionPane.showMessageDialog(
                                     frame,
-                                    "Player " + currentPlayer.getColorName() + " is out of fuel!",
-                                    
+                                    "Player " + currentPlayer.getColorName() + " is out of fuel!"
                             );
                         } else if (movementOutcome == PlayerMovementOutcome.WIN) {
                             JOptionPane.showMessageDialog(
@@ -148,7 +147,7 @@ public class GameUi {
                         } else if (movementOutcome == PlayerMovementOutcome.RESET) {
                             JOptionPane.showMessageDialog(
                                     frame,
-                                    "Player " + currentPlayer.getColorName() + " landed on black tile!"
+                                    "Player " + currentPlayer.getColor() + " landed on black tile!"
                             );
                         }
 

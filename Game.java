@@ -39,7 +39,7 @@ public class Game{
 
     public Player getCurrentTurnPlayer(){
         boolean isRedturn = round % 2 != 0;
-        return isRedturn ? playerRed : playerBlue;
+        return isRedturn ? playerBlue : playerRed;
     }
 
     public void onTurnPlayed(){
