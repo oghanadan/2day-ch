@@ -31,9 +31,11 @@ public class Grid {
             //int j = (int)(Math.random()*N);
             int x = rand.nextInt(N);
             int j = rand.nextInt(N);
-            if (board[x][j].getColor()==TileType.GREY){
-                board[x][j] = new GreenCell();
-                greenCount++;
+            if((x != 0 && j != 0) && (x != N-1 && j != 0)){
+                if (board[x][j].getColor()==TileType.GREY){
+                    board[x][j] = new GreenCell();
+                    greenCount++;
+                }
             }
         }
         // To randomly insert Black Cells

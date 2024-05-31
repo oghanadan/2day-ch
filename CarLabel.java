@@ -4,7 +4,7 @@ import java.awt.*;
 
 public class CarLabel extends JLabel {
     CarLabel(ImageIcon icon){
-        int size = 100;
+        int size = 50;
         // Resize the icon
         Image image = icon.getImage();
         Image newImage = image.getScaledInstance(size, size, Image.SCALE_SMOOTH);

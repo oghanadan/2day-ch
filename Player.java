@@ -110,7 +110,7 @@ public class Player{
     }
 
     public void updatePlayerPosition(int gridSize){
-        boolean shouldMoveLeft = (this.position[0] == 0) || (this.position[0] % 2 != 0);
+        boolean shouldMoveLeft = this.shouldMoveLeft(gridSize);
         if (shouldMoveLeft) {
             System.out.println(" - -Moving left - -");
             if (this.position[1] > 0) {
@@ -134,6 +134,18 @@ public class Player{
             }
         }
     
+    }
+
+    private boolean shouldMoveLeft(int gridSize){
+        if(gridSize % 2 == 0){
+            System.out.println("GRID IS EVEN");
+            return (this.position[0] % 2 == 0) && (this.position[0] != 0) && (this.position[0] != gridSize - 1);
+            
+            
+        }else{
+            System.out.println("GRID IS ODD");
+            return (this.position[0] == 0) || (this.position[0] % 2 != 0);
+        }
     }
 
     public void onPlayerLandsOnGreyTile(GreyCell landedOnCell){

@@ -83,6 +83,11 @@ public class GameUi {
                 cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 cellPanel.setBackground(tile.getUIColor());
                 JLabel label = new JLabel(tile.getDisplayValue());
+                if(i == gridSize - 1 && j == 0){
+                    label.setText("Start");
+                }else if(i == 0 && j == 0){
+                    label.setText("Finish");
+                }
 
                 // Add button with constraints
                 GridBagConstraints gbc = new GridBagConstraints();
@@ -158,6 +163,7 @@ public class GameUi {
                                     "Player " + currentPlayer.getColorName() + " wins!"
                             );
                             count = lastDieRoll;
+                            frame.dispose();
                         } else if (movementOutcome == PlayerMovementOutcome.RESET) {
                             JOptionPane.showMessageDialog(
                                     frame,

@@ -6,7 +6,7 @@ public class Game{
     private DefaultCell[][] board;
     private Die die = new Die();
     private int round = 1;
-    private int size = 5;
+    private int size = 3;
 
 
     public Game(){
