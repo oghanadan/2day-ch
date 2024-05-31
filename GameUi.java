@@ -75,6 +75,7 @@ public class GameUi {
         gridPanel = new JPanel();
         gridPanel.setLayout(new GridLayout(gridSize, gridSize));
 
+
         // Add buttons to grid panel
         for (int i = 0; i < gridSize; i++) {
             for (int j = 0; j < gridSize; j++) {
@@ -114,6 +115,7 @@ public class GameUi {
         buttonPanel = new JPanel();
         RollDiceButton rollDiceButton = new RollDiceButton();
 
+
         // Roll dice button action
         rollDiceButton.addActionListener(e -> {
             if (freezeInputs) {
@@ -130,16 +132,20 @@ public class GameUi {
             // Get the current player
             Player currentPlayer = this.game.getCurrentTurnPlayer();
 
+
+            // Display a message of how many turns the player has to miss if they chose to wait to refuel
             if(!canMove){
                 JOptionPane.showMessageDialog(
                     frame,
                     "Player " + currentPlayer.getColorName() + "misses turn! Remaining turns: " + currentPlayer.getTurnsToMiss()
                 );
                 toggleInputs();
+                //goes to the next round
                 game.incrementRound();
                 return;
             }
 
+            // Roll the die
             int lastDieRoll = this.game.getDie().getLastRoll();
             setDieRoll(lastDieRoll);
 
@@ -147,23 +153,30 @@ public class GameUi {
             Timer timer = new Timer(500, new ActionListener() {
                 int count = 0;
 
+                // handles the movement of the player
+                // loops over with a delay of 2 seconds for each value of the dice roll
+                // dice roll 6 = 6 loops
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (count < lastDieRoll) {
+                        // Check ig this is the final cycle of the dice movement
                         boolean landed = count == lastDieRoll - 1;
+                        //removes player's car from its current position on the grid
                         removeCarLabelFromPreviousPosition(currentPlayer);
                         // Move the player
                         PlayerMovementOutcome movementOutcome = game.movePlayer(currentPlayer, landed);
+
+                        // handles the outcome of the player's movement
                         if (movementOutcome == PlayerMovementOutcome.OUT_OF_FUEL){
-                            currentPlayer.onOutOfFuel(board, frame);
-                            count = lastDieRoll;
+                            currentPlayer.onOutOfFuel(board, frame); // show fuel recharge options dialg
+                            count = lastDieRoll; // stop the movement
                         } else if (movementOutcome == PlayerMovementOutcome.WIN) {
                             JOptionPane.showMessageDialog(
                                     frame,
                                     "Player " + currentPlayer.getColorName() + " wins!"
                             );
-                            count = lastDieRoll;
-                            frame.dispose();
+                            count = lastDieRoll; // stop the movement
+                            frame.dispose(); // close the game window
                         } else if (movementOutcome == PlayerMovementOutcome.RESET) {
                             JOptionPane.showMessageDialog(
                                     frame,
@@ -172,21 +185,24 @@ public class GameUi {
                         }
 
 
-                        // Update the player's new position
+                        // update the player's new position
                         updatePlayerUIPosition(currentPlayer);
 
+                        // updates the fuel bars
                         updateFuelBars();
                         count++;
                     } else {
-                        // Stop the timer once the die roll count is reached
+                        // stops the timer once the die roll count is reached
                         ((Timer) e.getSource()).stop();
                         toggleInputs();
                     }
                 }
             });
+            // sets the initial delay to 0 and start the timer
             timer.setInitialDelay(0);
             timer.start();
 
+            // goes to the next round
             game.incrementRound();
         });
         buttonPanel.add(rollDiceButton);
@@ -195,11 +211,11 @@ public class GameUi {
         dieRollButton = new JButton("Last Die Roll: " + this.dieRoll);
         buttonPanel.add(dieRollButton);
 
-        // Add grid panel and button panel to main panel
+        // adds grid panel and button panel to main panel
         mainPanel.add(gridPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add main panel to frame
+        // add main panel to frame
         frame.getContentPane().add(mainPanel);
         frame.setVisible(true);
     }
@@ -217,18 +233,17 @@ public class GameUi {
         int row = position[0];
         int col = position[1];
 
-        // Determine the car label based on player's color
-        //CarLabel carLabel = player.getColor() == Color.RED ? labelRedCar : labelBlueCar;
+        // get the car label based on player's color
         CarFuelPanel carPanel = player.getColor() == Color.RED ? redCarFuelPanel : blueCarFuelPanel;
 
-        // Calculate the index of the cell panel in the grid panel
+        // get the index of the cell panel in the grid panel
         int gridSize = game.getBoard().length;
         int cellIndex = row * gridSize + col;
 
-        // Get the cell panel
+        // get the cell panel
         JPanel cellPanel = (JPanel) gridPanel.getComponent(cellIndex);
 
-        // Check if the cell already contains the car label, if not add it
+        // see if the cell already contains the car label, if not add it
         boolean containsCarLabel = false;
         for (Component comp : cellPanel.getComponents()) {
             if (comp == carPanel) {
@@ -239,36 +254,36 @@ public class GameUi {
         if (!containsCarLabel) {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
-            gbc.gridy = (carPanel == redCarFuelPanel) ? 1 : 2; // Position red car label above, blue below
+            gbc.gridy = (carPanel == redCarFuelPanel) ? 1 : 2; // puts red car label above, blue below
             gbc.anchor = GridBagConstraints.CENTER;
             cellPanel.add(carPanel, gbc);
         }
 
-        // Always revalidate and repaint the cell panel to update the UI
+        // revalidate and repaint UI
         cellPanel.revalidate();
         cellPanel.repaint();
     }
 
     public void removeCarLabelFromPreviousPosition(Player player) {
-        // Get player's previous position
+        // player's previous position
         int[] position = player.getPosition();
         int row = position[0];
         int col = position[1];
 
-        // Determine the car label based on player's color
+        // get the car label based on player's color
         CarFuelPanel carPanel = player.getColor() == Color.RED ? redCarFuelPanel : blueCarFuelPanel;
 
-        // Calculate the index of the cell panel in the grid panel
+        // get the index of the cell panel in the grid panel
         int gridSize = game.getBoard().length;
         int cellIndex = row * gridSize + col;
 
-        // Get the cell panel
+        // get the cell panel
         JPanel cellPanel = (JPanel) gridPanel.getComponent(cellIndex);
 
-        // Remove the car label from the previous position
+        // remove the car label from the previous position
         cellPanel.remove(carPanel);
 
-        // Always revalidate and repaint the cell panel to update the UI
+        // update and revslidate the ui
         cellPanel.revalidate();
         cellPanel.repaint();
     }
