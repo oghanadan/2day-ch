@@ -1,5 +1,5 @@
 public class Car{
-    private int fuel = 10;
+    private int fuel = 5;
 
     public void setFuel(int fuel){
         if(fuel > 0){

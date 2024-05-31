@@ -6,84 +6,124 @@ import javax.swing.event.*;
 public class OutOfFuelDialog extends JDialog {
     private Player player;
     private DefaultCell[][] board;
-    // Variables
     private int option;
     private int turns = 0;
-    // Panels
-    JPanel turnPanel;
-    JPanel goToStartPanel;
-    // Slider
-    JSlider turnSlider;
-    // Labels
-    JLabel headerLabel;
-    JLabel goToStartLabel;
-    JLabel turnLabel;
-    // Buttons
-    JButton turnButton;
-    JButton goToStartButton;
-    JButton confirmTurnButton;
 
-    OutOfFuelDialog(JFrame parent, Player player, DefaultCell[][] board) {
+    private JPanel mainPanel;
+    private JPanel turnPanel;
+    private JPanel goToStartPanel;
+
+    private JSlider turnSlider;
+
+    private JLabel headerLabel;
+    private JLabel turnLabel;
+
+    private JButton confirmTurnButton;
+    private JButton goToStartButton;
+
+    public OutOfFuelDialog(JFrame parent, Player player, DefaultCell[][] board) {
         super(parent, "Out of Fuel", true);
-
         this.player = player;
         this.board = board;
 
-        // Create a header label
-        headerLabel = new JLabel("Select one Out of Fuel Options:");
+        initializeComponents();
+        layoutComponents();
+        addEventHandlers();
 
-        // Create a panel for the turn option
+        pack();
+        setSize(800, 400);
+        setLocationRelativeTo(parent);
+    }
+
+    private void initializeComponents() {
+        headerLabel = new JLabel("Select one Out of Fuel Option:", SwingConstants.CENTER);
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
         turnPanel = new JPanel();
         turnLabel = new JLabel("Select the number of turns to wait:");
         turnSlider = new JSlider(JSlider.HORIZONTAL, 1, 6, 1);
         confirmTurnButton = new JButton("Confirm");
 
-        // Customize the slider
-        turnSlider.setPreferredSize(new Dimension(100, 50));
-        turnSlider.setPaintTicks(true);
-        turnSlider.setPaintTrack(true);
-        turnSlider.setPaintLabels(true);
-        turnSlider.setMinorTickSpacing(1);
-        turnSlider.setMajorTickSpacing(2);
-        turnSlider.setOpaque(false);
+        customizeSlider(turnSlider);
 
-        // Add components to the turn panel
-        turnPanel.add(turnLabel);
-        turnPanel.add(turnSlider);
-        turnPanel.add(confirmTurnButton);
-
-        // Create a panel for the go to start option
         goToStartPanel = new JPanel();
         goToStartButton = new JButton("Go to Start");
+    }
 
-        // Add components to the go to start panel
-        goToStartPanel.add(goToStartButton);
+    private void layoutComponents() {
+        mainPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        
+        mainPanel.add(headerLabel, gbc);
 
-        // Set the layout manager for the dialog
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+        gbc.gridy++;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        mainPanel.add(turnLabel, gbc);
 
-        // Add panels to the dialog
-        add(headerLabel);
-        add(turnPanel);
-        add(goToStartPanel);
+        gbc.gridx++;
+        gbc.anchor = GridBagConstraints.EAST;
+        mainPanel.add(turnSlider, gbc);
 
-        // Start the select option method
-        selectOption();
+        gbc.gridx = 0;
+        gbc.gridy++;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.CENTER;
+        mainPanel.add(confirmTurnButton, gbc);
 
-        // Add a window listener to dispose the dialog
-        this.addWindowListener(new WindowAdapter() {
+        gbc.gridy++;
+        mainPanel.add(goToStartButton, gbc);
+
+        add(mainPanel);
+    }
+
+    private void addEventHandlers() {
+        turnSlider.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                setTurns(turnSlider.getValue());
+            }
+        });
+
+        confirmTurnButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.onRefuelChoice(turns, board);
+                setVisible(false);
+            }
+        });
+
+        goToStartButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                player.onRefuelChoice(0, board);
+                setVisible(false);
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 dispose();
             }
         });
-
-        pack();
-        setSize(600, 400);
-        setLocationRelativeTo(parent);
     }
 
-    // Getters
+    private void customizeSlider(JSlider slider) {
+        slider.setPreferredSize(new Dimension(200, 50));
+        slider.setPaintTicks(true);
+        slider.setPaintTrack(true);
+        slider.setPaintLabels(true);
+        slider.setMinorTickSpacing(1);
+        slider.setMajorTickSpacing(2);
+        slider.setOpaque(false);
+    }
+
     public int getOption() {
         return option;
     }
@@ -92,10 +132,8 @@ public class OutOfFuelDialog extends JDialog {
         return turns;
     }
 
-    // Setters
     public void setOption(int option) {
-        // If a mistake happens in the code set the option to 1 as default
-        if (this.option == 1 || this.option == 2) {
+        if (option == 1 || option == 2) {
             this.option = option;
         } else {
             this.option = 1;
@@ -104,34 +142,5 @@ public class OutOfFuelDialog extends JDialog {
 
     public void setTurns(int turns) {
         this.turns = turns;
-    }
-
-    // Select option method
-    public void selectOption() {
-        // Add action listeners to the slider
-        turnSlider.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                setTurns(turnSlider.getValue());
-            }
-        });
-
-        // Add action listeners to the confirm button
-        confirmTurnButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                OutOfFuelDialog.this.player.onRefuelChoice(turns, board); // Correctly reference player
-                OutOfFuelDialog.this.setVisible(false);
-            }
-        });
-
-        // Add action listeners to the go to start button
-        goToStartButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                OutOfFuelDialog.this.player.onRefuelChoice(0, board); // Correctly reference player
-                OutOfFuelDialog.this.setVisible(false);
-            }
-        });
     }
 }
