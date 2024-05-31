@@ -1,9 +1,9 @@
 import java.awt.Color;
 import javax.swing.JFrame;
 
+// Different possible outcomes of a player movement
 enum PlayerMovementOutcome {
     SUCCESS,
-    PLAYER_MISS_TURN,
     OUT_OF_FUEL,
     RESET,
     WIN,
@@ -23,40 +23,50 @@ public class Player{
         this.car = new Car();
     }
 
+    // sets the position of the player on the game board
     public void setPosition(int row, int col){
         this.position[0] = row;
         this.position[1] = col;
     }
 
+    // sets the row of the player on the game board
     public void setRow(int row){
         this.position[0] = row;
     }
 
+    // sets the column of the player on the game board
     public void setCol(int col){
         this.position[1] = col;
     }
     
 
+    // returns the color of the player
     public Color getColor(){
         return this.color;
     }
 
+    // returns the String that represents the color of the player
     public String getColorName(){
         return this.color == Color.RED ? "RED" : "BLUE";
     }
 
+
+    // returns the position of the player on the game board
     public int[] getPosition(){
         return this.position;
     }
 
+    // returns the car instance associated with the player
     public Car getCar() {
         return car;
     }
 
+    // returns whether the player is alive or not
     public boolean isAlive() {
         return isAlive;
     }
 
+    // checks if the player is to miss a turn and decrements the number of turns to miss if true
     public boolean isToMissTurn() {
         if(turnsToMiss > 0){
             turnsToMiss--;
@@ -65,51 +75,59 @@ public class Player{
         return false;
     }
 
+    // returns the number of turns the player is to miss
     public int getTurnsToMiss(){
         return turnsToMiss;
     }
 
+
+    //handles the movement of the player on the game board
     public PlayerMovementOutcome movePlayer(DefaultCell[][] board, boolean landed){
         int gridSize = board.length;
 
+        // Check if the player is out of fuel
         if(this.car.isOutOfFuel()){
             return PlayerMovementOutcome.OUT_OF_FUEL;
         }
 
+        // Update the player's position
         updatePlayerPosition(gridSize);
 
+        // Get the cell the player landed on
         DefaultCell currentCell = board[this.position[0]][this.position[1]];
 
+        // if the current cell is the final cell of the movement
         if(!landed){
             if(currentCell.getColor() == TileType.GREY){
+                //handles landingo on a grey cell
                 onPlayerLandsOnGreyTile((GreyCell)currentCell);
             }
         }else{
             if(currentCell.getColor() == TileType.BLACK){
                 System.out.println("Player " + this.color + " landed on black tile!");
+                //handles landing on a black cell
                 onPlayerLandsOnBlackTile(board);
                 return PlayerMovementOutcome.RESET;
             }else if(currentCell.getColor() == TileType.GREEN){
                 System.out.println("Player " + this.color + " landed on green tile!");
+                //handles landing on a green cell
                 onPlayerLandsOnGreenTile();
             }
 
             if(this.position[0] == 0 && this.position[1] == 0){
+                // Check if the player has won the game
                 System.out.println("Player " + this.color + " wins!");
                 return PlayerMovementOutcome.WIN;
             }
         }
 
-
-        if(this.position[0] == 0 && this.position[1] == 0){
-            return PlayerMovementOutcome.WIN;
-        }
-
+        //if nothing goes wrong, return success
 
         return PlayerMovementOutcome.SUCCESS;
     }
 
     public void updatePlayerPosition(int gridSize){
+        // checks if player should go left or right depending on the current row and grid size (used to make it move in a zig zag way)
         boolean shouldMoveLeft = this.shouldMoveLeft(gridSize);
         if (shouldMoveLeft) {
             System.out.println(" - -Moving left - -");
@@ -137,6 +155,7 @@ public class Player{
     }
 
     private boolean shouldMoveLeft(int gridSize){
+        // returns the appropriate logic based on whether the grid size is even or odd
         if(gridSize % 2 == 0){
             System.out.println("GRID IS EVEN");
             return (this.position[0] % 2 == 0) && (this.position[0] != 0) && (this.position[0] != gridSize - 1);
@@ -149,33 +168,37 @@ public class Player{
     }
 
     public void onPlayerLandsOnGreyTile(GreyCell landedOnCell){
+        // decrease the fuel of the player based on the fuel consumption of the cell
         int fuelConsumption = landedOnCell.getFuelConsumption();
         this.car.decreaseFuel(fuelConsumption);
     }
 
     public void onPlayerLandsOnGreenTile(){
+        // adds 50% of the current fuel to the player's car
         int fuelToBeAdded = this.car.getFuelByPercentage(50);
-        System.out.println("Adding fuel: " + fuelToBeAdded);
         this.car.increaseFuel(fuelToBeAdded);
     }
 
     public void onPlayerLandsOnBlackTile(DefaultCell[][] board){
+        // reset the player's position to the starting position if player lands on a black cell
         resetPlayerPosition(board);
     }
 
     private void resetPlayerPosition(DefaultCell[][] board){
+        // reset the player's position to the starting position
         this.position[0] = board.length - 1;
         this.position[1] = 0;
     }
 
     public void onOutOfFuel(DefaultCell[][] board, JFrame frame){
-        // Display the new frame
+        // Display the out of fuel dialog along with the options
         OutOfFuelDialog outOfFuelDialog = new OutOfFuelDialog(frame,this,board);
         outOfFuelDialog.setVisible(true);
         
     }
 
     public void onRefuelChoice(int fuelRecharge, DefaultCell[][] board){
+        // refuel the player's car based on the fuel recharge option chosen by the player
         System.out.println("Refueling with: " + fuelRecharge);
         if(fuelRecharge > 0){
             switch(fuelRecharge){
@@ -205,7 +228,9 @@ public class Player{
                     break;
             }
         }else{
+            // reset the player's position if the player chooses to go back to the starting position
             resetPlayerPosition(board);
+            // refuel the player's car to maximum fuel
             this.car.setFuel(120);
         }
     }
