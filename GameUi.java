@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 public class GameUi {
+    // Variables
     private Game game;
     private int dieRoll = 0;
     private GameFrame frame;
@@ -12,6 +13,8 @@ public class GameUi {
     private JPanel buttonPanel;
     private CarLabel labelRedCar;
     private CarLabel labelBlueCar;
+    private CarFuelPanel redCarFuelPanel;
+    private CarFuelPanel blueCarFuelPanel;
     private JButton dieRollButton;
     private JProgressBar redCarFuelBar;
     private JProgressBar blueCarFuelBar;
@@ -51,6 +54,10 @@ public class GameUi {
         redCarFuelBar.setStringPainted(true);
         blueCarFuelBar.setStringPainted(true);
 
+        // Create a panel for the bars and cars
+        redCarFuelPanel = new CarFuelPanel(labelRedCar, redCarFuelBar);
+        blueCarFuelPanel = new CarFuelPanel(labelBlueCar, blueCarFuelBar);
+
         // Get car positions
         int[] redCarPosition = game.getPlayerRed().getPosition();
         int[] blueCarPosition = game.getPlayerBlue().getPosition();
@@ -69,38 +76,23 @@ public class GameUi {
                 JPanel cellPanel = new JPanel(new GridBagLayout());
                 cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 cellPanel.setBackground(tile.getUIColor());
-                JButton button = new JButton(tile.getDisplayValue());
-                button.setOpaque(true);
-                button.setContentAreaFilled(true);
-                button.setBorderPainted(false);
-                button.setForeground(Color.RED);
-                button.addActionListener(
-                        new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                JOptionPane.showMessageDialog(
-                                        frame,
-                                        ((JButton) e.getSource()).getText() + " clicked!"
-                                );
-                            }
-                        }
-                );
+                JLabel label = new JLabel(tile.getDisplayValue());
 
                 // Add button with constraints
                 GridBagConstraints gbc = new GridBagConstraints();
                 gbc.gridx = 0;
                 gbc.gridy = 0;
                 gbc.anchor = GridBagConstraints.CENTER;
-                cellPanel.add(button, gbc);
+                cellPanel.add(label, gbc);
 
                 // Add car labels to the correct cell with constraints
                 if (i == redCarPosition[0] && j == redCarPosition[1]) {
                     gbc.gridy = 1; // Position red car label above the button
-                    cellPanel.add(labelRedCar, gbc);
+                    cellPanel.add(redCarFuelPanel, gbc);
                 }
                 if (i == blueCarPosition[0] && j == blueCarPosition[1]) {
                     gbc.gridy = 2; // Position blue car label below the red car label
-                    cellPanel.add(labelBlueCar, gbc);
+                    cellPanel.add(blueCarFuelPanel, gbc);
                 }
 
                 gridPanel.add(cellPanel);
@@ -128,7 +120,6 @@ public class GameUi {
                 public void actionPerformed(ActionEvent e) {
                     if (count < lastDieRoll) {
                         boolean landed = count == lastDieRoll - 1;
-                        System.out.println("Land: " + landed);
 
                         removeCarLabelFromPreviousPosition(currentPlayer);
 
@@ -172,12 +163,6 @@ public class GameUi {
         dieRollButton = new JButton("Last Die Roll: " + this.dieRoll);
         buttonPanel.add(dieRollButton);
 
-        // Add fuel bars to button panel
-        buttonPanel.add(new JLabel("Red Car Fuel:"));
-        buttonPanel.add(redCarFuelBar);
-        buttonPanel.add(new JLabel("Blue Car Fuel:"));
-        buttonPanel.add(blueCarFuelBar);
-
         // Add grid panel and button panel to main panel
         mainPanel.add(gridPanel, BorderLayout.CENTER);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -201,7 +186,8 @@ public class GameUi {
         int col = position[1];
 
         // Determine the car label based on player's color
-        CarLabel carLabel = player.getColor() == Color.RED ? labelRedCar : labelBlueCar;
+        //CarLabel carLabel = player.getColor() == Color.RED ? labelRedCar : labelBlueCar;
+        CarFuelPanel carPanel = player.getColor() == Color.RED ? redCarFuelPanel : blueCarFuelPanel;
 
         // Calculate the index of the cell panel in the grid panel
         int gridSize = game.getBoard().length;
@@ -213,7 +199,7 @@ public class GameUi {
         // Check if the cell already contains the car label, if not add it
         boolean containsCarLabel = false;
         for (Component comp : cellPanel.getComponents()) {
-            if (comp == carLabel) {
+            if (comp == carPanel) {
                 containsCarLabel = true;
                 break;
             }
@@ -221,9 +207,9 @@ public class GameUi {
         if (!containsCarLabel) {
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
-            gbc.gridy = (carLabel == labelRedCar) ? 1 : 2; // Position red car label above, blue below
+            gbc.gridy = (carPanel == redCarFuelPanel) ? 1 : 2; // Position red car label above, blue below
             gbc.anchor = GridBagConstraints.CENTER;
-            cellPanel.add(carLabel, gbc);
+            cellPanel.add(carPanel, gbc);
         }
 
         // Always revalidate and repaint the cell panel to update the UI
@@ -238,7 +224,7 @@ public class GameUi {
         int col = position[1];
 
         // Determine the car label based on player's color
-        CarLabel carLabel = player.getColor() == Color.RED ? labelRedCar : labelBlueCar;
+        CarFuelPanel carPanel = player.getColor() == Color.RED ? redCarFuelPanel : blueCarFuelPanel;
 
         // Calculate the index of the cell panel in the grid panel
         int gridSize = game.getBoard().length;
@@ -248,7 +234,7 @@ public class GameUi {
         JPanel cellPanel = (JPanel) gridPanel.getComponent(cellIndex);
 
         // Remove the car label from the previous position
-        cellPanel.remove(carLabel);
+        cellPanel.remove(carPanel);
 
         // Always revalidate and repaint the cell panel to update the UI
         cellPanel.revalidate();
