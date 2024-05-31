@@ -230,8 +230,8 @@ public class Player{
         }else{
             // reset the player's position if the player chooses to go back to the starting position
             resetPlayerPosition(board);
-            // refuel the player's car to maximum fuel
-            this.car.setFuel(120);
+            // refuel the player's car to a random value between 1 and 120
+            this.car.setFuel((int)(Math.random()*120)+1);
         }
     }
 
