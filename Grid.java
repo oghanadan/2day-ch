@@ -23,7 +23,7 @@ public class Grid {
         // To Randomly insert Green Cells
         Random rand = new Random();
         int greenCount = 0;
-        double a = N*N*0.15;
+        double a = N*N*0.35;
         //Using percentage (15%) for the amount of green cells
         int greenAmount = (int)a;
         while (greenCount<greenAmount){
@@ -39,13 +39,15 @@ public class Grid {
         // To randomly insert Black Cells
         int blackCount = 0;
         //Using percentage (15%) for the amount of black cells, a is the same since both black and green have same percentage ratio.
-        int blackAmount = (int)a;
+        int blackAmount = (int)(N*N*0.15);
         while (blackCount<blackAmount){
             int x = (int)(Math.random()*N);
             int j = (int)(Math.random()*N);
-            if (board[x][j].getColor()== TileType.GREY){
-                board[x][j] = new BlackCell();
-                blackCount++;
+            if((x != 0 && j != 0) && (x != N-1 && j != 0)){
+                if (board[x][j].getColor()== TileType.GREY){
+                    board[x][j] = new BlackCell();
+                    blackCount++;
+                }
             }
         }
         // To print NxN Table, DOESNT WORK

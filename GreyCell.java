@@ -1,3 +1,6 @@
+import java.awt.Color;
+
+
 public class GreyCell implements DefaultCell {
     private int fuelConsumption = (int)(Math.random()*3)+1;
 
@@ -17,5 +20,9 @@ public class GreyCell implements DefaultCell {
 
     public GreyCell(){
         getDisplayValue();
+    }
+
+    public Color getUIColor(){
+        return Color.GRAY;
     }
 }

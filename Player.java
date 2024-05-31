@@ -12,6 +12,7 @@ public class Player{
     private int[] position; // [row, col]
     private Car car;
     private boolean isAlive = true;
+    private int turnsToMiss = 0;
 
     public Player(Color color, int row, int col){
         this.color = color;
@@ -35,6 +36,10 @@ public class Player{
     }
     
 
+    public Color getColor(){
+        return this.color;
+    }
+
     public int[] getPosition(){
         return this.position;
     }
@@ -47,54 +52,79 @@ public class Player{
         return isAlive;
     }
 
-    public PlayerMovementOutcome movePlayer(int dieRoll, DefaultCell[][] board){
-        int gridSize = board.length;
-        for (int i = 0; i < dieRoll; i++) {
-            DefaultCell currentCell = board[this.position[0]][this.position[1]];
-            switch(currentCell.getColor()){
-                case TileType.GREY:
-                    onPlayerLandsOnGreyTile((GreyCell)currentCell);
-                    break;
-                case TileType.GREEN:
-                    onPlayerLandsOnGreenTile();
-                    break;
-                case TileType.BLACK:
-                    onPlayerLandsOnBlackTile(board);
-                    return PlayerMovementOutcome.RESET;
-            }
+    public boolean isToMissTurn() {
+        if(turnsToMiss > 0){
+            turnsToMiss--;
+            return true;
+        }
+        return false;
+    }
 
-            if(this.car.isOutOfFuel()){
-                return PlayerMovementOutcome.OUT_OF_FUEL;
+    public PlayerMovementOutcome movePlayer(DefaultCell[][] board, boolean landed){
+        int gridSize = board.length;
+
+        if(this.car.isOutOfFuel()){
+            return PlayerMovementOutcome.OUT_OF_FUEL;
+        }
+
+        updatePlayerPosition(gridSize);
+
+        DefaultCell currentCell = board[this.position[0]][this.position[1]];
+
+        if(!landed){
+            if(currentCell.getColor() == TileType.GREY){
+                onPlayerLandsOnGreyTile((GreyCell)currentCell);
+            }
+        }else{
+            if(currentCell.getColor() == TileType.BLACK){
+                System.out.println("Player " + this.color + " landed on black tile!");
+                onPlayerLandsOnBlackTile(board);
+                return PlayerMovementOutcome.RESET;
+            }else if(currentCell.getColor() == TileType.GREEN){
+                System.out.println("Player " + this.color + " landed on green tile!");
+                onPlayerLandsOnGreenTile();
             }
 
             if(this.position[0] == 0 && this.position[1] == 0){
+                System.out.println("Player " + this.color + " wins!");
                 return PlayerMovementOutcome.WIN;
             }
-
-            movePlayer(gridSize);
-
         }
+
+
+        if(this.position[0] == 0 && this.position[1] == 0){
+            return PlayerMovementOutcome.WIN;
+        }
+
 
         return PlayerMovementOutcome.SUCCESS;
     }
 
-    public void movePlayer(int gridSize){
-        boolean shouldMoveLeft = this.position[0] % 2 != 0;
-            if (shouldMoveLeft) {
-                if (this.position[1] > 0) {
-                    setCol(this.position[1] - 1);
-                } else if (this.position[0] > 0) {
+    public void updatePlayerPosition(int gridSize){
+        boolean shouldMoveLeft = (this.position[0] == 0) || (this.position[0] % 2 != 0);
+        if (shouldMoveLeft) {
+            System.out.println(" - -Moving left - -");
+            if (this.position[1] > 0) {
+                System.out.println("from 2");
+                setCol(this.position[1] - 1);
+            } else if (this.position[0] > 0) {
+                if(this.position[0] == 1){
+                    setCol(gridSize - 1);
+                    setRow(0);
+                }else{
                     setCol(0);
                     setRow(this.position[0] - 1);
                 }
-            } else {
-                if (this.position[1] < gridSize - 1) {
-                    setCol(this.position[1] + 1);
-                } else if (this.position[0] > 0) {
-                    setCol(gridSize - 1);
-                    setRow(this.position[0] - 1);
-                }
             }
+        } else {
+            if (this.position[1] < gridSize - 1) {
+                setCol(this.position[1] + 1);
+            } else if (this.position[0] > 0) {
+                setCol(gridSize - 1);
+                setRow(this.position[0] - 1);
+            }
+        }
+    
     }
 
     public void onPlayerLandsOnGreyTile(GreyCell landedOnCell){
@@ -104,6 +134,7 @@ public class Player{
 
     public void onPlayerLandsOnGreenTile(){
         int fuelToBeAdded = this.car.getFuelByPercentage(50);
+        System.out.println("Adding fuel: " + fuelToBeAdded);
         this.car.increaseFuel(fuelToBeAdded);
     }
 

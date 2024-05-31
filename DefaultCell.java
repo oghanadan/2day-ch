@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 enum TileType {
   GREY,
   GREEN,
@@ -7,6 +9,7 @@ enum TileType {
 interface DefaultCell{
     public TileType getColor();
     public String getDisplayValue();
+    public Color getUIColor();
 }
 
 

@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class GreenCell implements DefaultCell{
     private String value = "G";
     private static final TileType type = TileType.GREEN;
@@ -11,5 +13,9 @@ public class GreenCell implements DefaultCell{
     }
     public GreenCell(){
         getDisplayValue();
+    }
+
+    public Color getUIColor(){
+        return Color.GREEN;
     }
 }   

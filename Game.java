@@ -10,9 +10,9 @@ public class Game{
 
 
     public Game(){
-        playerRed = new Player(Color.RED,0,0);
-        playerBlue = new Player(Color.BLUE,0,0);
         setBoard();
+        playerRed = new Player(Color.RED,size-1,0);
+        playerBlue = new Player(Color.BLUE,size-1,0);
         //startGame();
     }
 
@@ -33,21 +33,34 @@ public class Game{
         return playerBlue;
     }
 
-    public void startGame(){
-        while(playerRed.isAlive() && playerBlue.isAlive()){
-            boolean isRedturn = round % 2 != 0;
-            Player currentPlayer = isRedturn ? playerRed : playerBlue;
-            playTurn(currentPlayer);
+    public Die getDie(){
+        return die;
+    }
 
+    public Player getCurrentTurnPlayer(){
+        boolean isRedturn = round % 2 != 0;
+        return isRedturn ? playerRed : playerBlue;
+    }
+
+    public void onTurnPlayed(){
+        Player currentPlayer = getCurrentTurnPlayer();
+
+        if(!currentPlayer.isToMissTurn()){
+            int dieRoll = die.rollAndGetNewValue();
+        }else{
+            System.out.println("Player " + currentPlayer.getColor() + " misses turn!");
         }
+
+        round++;
     }
 
-    private void playTurn(Player player){
-        int dieRoll = die.rollAndGetNewValue();
-        PlayerMovementOutcome movementOutcome = player.movePlayer(dieRoll, board);
 
-
+    public PlayerMovementOutcome movePlayer(Player player, boolean landed){
+        PlayerMovementOutcome outcome = player.movePlayer(board,landed);
+        return outcome;
     }
+
+
 
 
 }

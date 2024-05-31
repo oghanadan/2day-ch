@@ -15,9 +15,18 @@ public class Car{
 
     public void decreaseFuel(int fuel){
         if(fuel > 0){
-            int newFuel = this.fuel - fuel;
-            setFuel(newFuel);
+            if(fuel <= 120){
+                int newFuel = this.fuel - fuel;
+                setFuel(newFuel);
+            }else{
+                setFuel(120);
+            }
+        }else{
+            setFuel(0);
         }
+
+
+        System.out.println("New Fuel: " + this.fuel);
     }
 
     public void increaseFuel(int fuel){
@@ -27,9 +36,10 @@ public class Car{
         }
     }
 
-    public int getFuelByPercentage(int percentage){
-        if(percentage > 0){
-            int newFuel = (int)(this.fuel * (percentage/100));
+    public int getFuelByPercentage(int percentage) {
+        if (percentage > 0) {
+            int newFuel = (int)(this.fuel * ((float)percentage / 100));
+            System.out.println("New Fuel: " + newFuel);
             return newFuel;
         }
         return 0;

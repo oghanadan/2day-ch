@@ -1,3 +1,5 @@
+import java.awt.Color;
+
 public class BlackCell implements DefaultCell{
     private String value = "B";
     private static final TileType type = TileType.BLACK;
@@ -9,8 +11,12 @@ public class BlackCell implements DefaultCell{
     public String getDisplayValue(){
         return value;
     }
-    
+
     public BlackCell(){
         getDisplayValue();
+    }
+
+    public Color getUIColor(){
+        return Color.BLACK;
     }
 }   
